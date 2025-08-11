@@ -13,18 +13,20 @@ const PORT = process.env.PORT || 5002;
 connectDB();
 
 const allowedOrigins = [
-  process.env.FRONTEND_URL || 'http://localhost:3000',
-  process.env.BASE_URL || 'https://url-shorten-1-b8lq.onrender.com',
+  process.env.FRONTEND_URL?.replace(/\/$/, ''), // remove trailing slash if any
+  process.env.BASE_URL?.replace(/\/$/, ''), 
   'http://localhost:3000'
-];
+].filter(Boolean); // remove undefined values
 
 app.use(cors({
   origin: (origin, callback) => {
-    // allow requests with no origin (like direct browser navigation or server-to-server)
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (!origin) return callback(null, true); // allow server-to-server or direct requests
+
+    const cleanOrigin = origin.replace(/\/$/, '');
+    if (allowedOrigins.includes(cleanOrigin)) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(new Error(`CORS blocked for origin: ${origin}`));
     }
   },
   credentials: true
