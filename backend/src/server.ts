@@ -17,6 +17,10 @@ const allowedOrigins = [
   process.env.BASE_URL?.replace(/\/$/, ''), 
   'http://localhost:3000'
 ].filter(Boolean); // remove undefined values
+app.use((req, res, next) => {
+  console.log('Incoming Origin:', req.headers.origin);
+  next();
+});
 
 app.use(cors({
   origin: (origin, callback) => {
