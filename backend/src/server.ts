@@ -14,7 +14,8 @@ connectDB();
 
 const allowedOrigins = [
   process.env.FRONTEND_URL || 'http://localhost:3000',
-  process.env.BASE_URL || 'https://url-shorten-1-b8lq.onrender.com'
+  process.env.BASE_URL || 'https://url-shorten-1-b8lq.onrender.com',
+  'http://localhost:3000'
 ];
 
 app.use(cors({
