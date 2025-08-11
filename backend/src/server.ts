@@ -12,10 +12,23 @@ const PORT = process.env.PORT || 5002;
 
 connectDB();
 
+const allowedOrigins = [
+  process.env.FRONTEND_URL || 'http://localhost:3000',
+  process.env.BASE_URL || 'https://url-shorten-1-b8lq.onrender.com'
+];
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: (origin, callback) => {
+    // allow requests with no origin (like direct browser navigation or server-to-server)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
